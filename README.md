@@ -133,7 +133,7 @@ This triggers a manual run without waiting for the cron schedule.
 
 ```
 ┌─────────────────────────────────────────────────┐
-│  GitHub Actions (cron: daily 6 AM WIB)           │
+│  GitHub Actions (cron: daily 6:42 AM & 5:40 PM WIB)       │
 │                                                   │
 │  1. Checkout repo                                 │
 │  2. pip install tweepy                            │
@@ -173,9 +173,10 @@ This project uses **OAuth 1.0a** — recommended by Twitter for automated bots.
 
 ### Change posting time
 
-Edit `.github/workflows/daily.yml`, modify the cron line:
+Edit `.github/workflows/daily.yml`, modify the cron lines:
 ```yaml
 - cron: "42 23 * * *"   # 6:42 AM WIB (23:42 UTC)
+- cron: "40 10 * * *"   # 5:40 PM WIB (10:40 UTC)
 #         M  H  D  M  DOW
 ```
 

@@ -170,11 +170,18 @@ def main():
     posted_keys = set(state.get("posted_keys", []))
     streak = state.get("streak", 0)
 
-    # Check if already posted today
+    # Check if already posted max times today (2 posts/day)
     today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
     last_post_date = state.get("last_post_date", "")
-    if last_post_date == today and not dry_run:
-        print(f"  ⚠ Already posted today ({today}). Use --dry-run to preview next.")
+    posts_today = state.get("posts_today", 0)
+
+    # Reset counter if it's a new day
+    if last_post_date != today:
+        posts_today = 0
+
+    MAX_POSTS_PER_DAY = 2
+    if posts_today >= MAX_POSTS_PER_DAY and not dry_run:
+        print(f"  ⚠ Already posted {MAX_POSTS_PER_DAY}x today ({today}). Use --dry-run to preview next.")
         print(f"  Current streak: {streak} day(s)")
         sys.exit(0)
 
@@ -259,7 +266,9 @@ def main():
 
         # Update state
         posted_keys.add(ayah["key"])
-        if last_post_date:
+
+        # Streak: only count the FIRST post of each day toward streak
+        if last_post_date and last_post_date != today:
             last_date = datetime.strptime(last_post_date, "%Y-%m-%d")
             today_date = datetime.strptime(today, "%Y-%m-%d")
             diff = (today_date - last_date).days
@@ -267,10 +276,12 @@ def main():
                 streak += 1
             elif diff > 1:
                 streak = 1  # Break in streak
-        else:
+        elif not last_post_date:
             streak = 1
 
+        posts_today += 1
         state["last_post_date"] = today
+        state["posts_today"] = posts_today
         state["posted_keys"] = list(posted_keys)
         state["streak"] = streak
         state["last_ayah"] = ayah["key"]

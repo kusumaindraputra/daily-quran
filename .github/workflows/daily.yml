@@ -2,8 +2,9 @@ name: Daily Quran Post
 
 on:
   schedule:
-    # 6:42 AM WIB = 23:42 UTC
+    # 6:42 AM WIB (23:42 UTC) & 5:40 PM WIB (10:40 UTC)
     - cron: "42 23 * * *"
+    - cron: "40 10 * * *"
   workflow_dispatch:  # Allow manual trigger via GitHub UI
 
 permissions:
