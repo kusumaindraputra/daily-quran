@@ -170,7 +170,6 @@ def main():
     posted_keys = set(state.get("posted_keys", []))
     streak = state.get("streak", 0)
 
-    # Check if already posted max times today (2 posts/day)
     today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
     last_post_date = state.get("last_post_date", "")
     posts_today = state.get("posts_today", 0)
@@ -178,12 +177,6 @@ def main():
     # Reset counter if it's a new day
     if last_post_date != today:
         posts_today = 0
-
-    MAX_POSTS_PER_DAY = 2
-    if posts_today >= MAX_POSTS_PER_DAY and not dry_run:
-        print(f"  ⚠ Already posted {MAX_POSTS_PER_DAY}x today ({today}). Use --dry-run to preview next.")
-        print(f"  Current streak: {streak} day(s)")
-        sys.exit(0)
 
     # Pick ayah
     print("[3/4] Selecting ayah...")
